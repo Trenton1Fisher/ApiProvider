@@ -23,40 +23,97 @@ TODO: Add favicon and icons later
 </header>
 
 <main>
-    <section id="token-section">
-        <h2>Generate Your API Token</h2>
-        <p>Click the button below to generate an authorized token for our API service:</p>
-        <button onclick="tempButtonEvent()">Get Authorized Token</button>
-        <div id="token-display"></div>
-    </section>
+  <section id="token-section">
+      <h2>Generate Your API Token</h2>
+      <p>Click the button below to generate an authorized token to interact with our Dog Breeds API service:</p>
+      <button onclick="tempButtonEvent()">Generate API Token</button>
+      <div id="token-display"></div>
+  </section>
 
-    <section id="details">
-        <h2>Service Details</h2>
-        <p>Our API service provides you with powerful tools to integrate our features into your applications. Here are some key details:</p>
-        <ul>
-            <li>RESTful API endpoints</li>
-            <li>JSON response format</li>
-            <li>HTTPS encryption for all requests</li>
-            <li>Rate limiting: 1000 requests per hour</li>
-            <li>24/7 uptime with 99.9% availability</li>
-        </ul>
-    </section>
+  <section id="details">
+      <h2>API Service Details</h2>
+      <p>Our API provides you with easy access to a comprehensive dataset of dog breeds. Here are some key details:</p>
+      <ul>
+          <li>RESTful API endpoints for retrieving dog breed information</li>
+          <li>JSON response format for easy integration</li>
+          <li>HTTPS encryption to keep your data secure</li>
+          <li>Rate limiting: 1000 requests per hour to ensure fair usage</li>
+          <li>99.9% uptime for continuous availability</li>
+      </ul>
+  </section>
 
-    <section id="rules">
-        <h2>Usage Rules</h2>
-        <p>To ensure fair usage and maintain service quality for all users, please adhere to the following rules:</p>
-        <ol>
-            <li>Do not share your API token with others.</li>
-            <li>Implement proper error handling in your applications.</li>
-            <li>Cache responses when appropriate to reduce unnecessary API calls.</li>
-            <li>Respect the rate limits to avoid being temporarily blocked.</li>
-            <li>Report any bugs or security vulnerabilities to our support team.</li>
-        </ol>
-    </section>
+  <section id="api-endpoints">
+      <h2>Example API Endpoints</h2>
+      <p>Here are some example endpoints you can use once you have your API token. Please note the required regulations for each query parameter:</p>
+      <ul>
+          <li><strong>GET /api/dog-breeds?page=1&limit=10</strong> 
+              - Retrieve a paginated list of dog breeds (requires `page` and `limit` query parameters). 
+              - The `page` parameter must be a positive integer, and `limit` must be an integer between 1 and 100.</li>
+          <li><strong>GET /api/dog-breeds/{id}</strong> 
+              - Retrieve detailed information about a specific dog breed by its ID.</li>
+          <li><strong>GET /api/dog-breeds/search?size=medium</strong> 
+              - Search for dog breeds by size (e.g., "small", "medium", "large").</li>
+          <li><strong>GET /api/dog-breeds/feature?friendly-rating=8</strong> 
+              - Find dog breeds with a high friendliness rating. 
+              - The `friendly-rating` parameter must be an integer between 1 and 10.</li>
+          <li><strong>GET /api/dog-breeds/lifespan?min=10</strong> 
+              - Search for breeds with an average lifespan greater than or equal to 10 years. 
+              - The `min` parameter must be an integer.</li>
+          <li><strong>GET /api/dog-breeds/filter</strong> 
+              - Use multiple query parameters to filter the dog breeds by various characteristics.
+              - Available filters:
+                  <ul>
+                      <li><strong>Name</strong>: The common name of the breed (string).</li>
+                      <li><strong>Origin</strong>: The country or region of origin (string).</li>
+                      <li><strong>Type</strong>: The breed classification (e.g., "Sporting", "Terrier") (string).</li>
+                      <li><strong>Unique Feature</strong>: Distinctive trait (string).</li>
+                      <li><strong>Friendly Rating</strong>: An integer between 1 and 10 (inclusive).</li>
+                      <li><strong>Life Span</strong>: An integer (number of years).</li>
+                      <li><strong>Size</strong>: The typical size classification (small, medium, large, giant) (string).</li>
+                      <li><strong>Grooming Needs</strong>: Level of grooming required (string).</li>
+                      <li><strong>Exercise Requirements</strong>: Integer representing hours per day (integer).</li>
+                      <li><strong>Good with Children</strong>: Boolean indicating if breed is good with children (boolean).</li>
+                      <li><strong>Intelligence Rating</strong>: An integer between 1 and 10 (inclusive).</li>
+                      <li><strong>Shedding Level</strong>: Level of shedding (string, e.g., low, medium, high).</li>
+                      <li><strong>Health Issues Risk</strong>: Level of health issues (e.g., low, medium, high) (string).</li>
+                      <li><strong>Average Weight</strong>: Weight of the breed in kilograms (decimal or integer).</li>
+                      <li><strong>Training Difficulty</strong>: An integer between 1 and 10 (inclusive).</li>
+                  </ul>
+              - Example: `/api/dog-breeds/filter?friendly-rating=8&size=medium&lifespan=12`
+              - This will return breeds with a friendliness rating of 8, medium size, and lifespan of at least 12 years.
+          </li>
+      </ul>
+      <p>All endpoints require a valid API token in the request header for authorization.</p>
+  </section>
+
+  <section id="rules">
+      <h2>API Usage Rules</h2>
+      <p>To maintain the quality of service and ensure a fair experience for all users, please follow these rules:</p>
+      <ol>
+          <li>Keep your API token confidential and do not share it with others.</li>
+          <li>Handle errors properly in your application to ensure a smooth experience.</li>
+          <li>Use caching where appropriate to minimize unnecessary API calls.</li>
+          <li>Respect the rate limits to avoid temporary blocks on your account.</li>
+          <li>Report any issues or vulnerabilities to our support team promptly.</li>
+      </ol>
+  </section>
+
+  <section id="usage">
+      <h2>Use Cases</h2>
+      <p>Here are some ways you can use the Dog Breeds API to integrate data into your application:</p>
+      <ul>
+          <li>Retrieve information about different dog breeds, including characteristics and ratings.</li>
+          <li>Search for breeds based on criteria like size, lifespan, and friendliness.</li>
+          <li>Sort or filter dog breeds to tailor the results to your application's needs.</li>
+          <li>Integrate the data into websites, mobile apps, or internal tools.</li>
+      </ul>
+  </section>
 </main>
 
+
+
 <footer>
-    <p>&copy; 2023 API Service. All rights reserved.</p>
+    <p>&copy; 2024 API Service. All rights reserved.</p>
 </footer>
 
 

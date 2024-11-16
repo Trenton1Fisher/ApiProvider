@@ -1,0 +1,1 @@
+//Go file to load all data into the made postgres database
