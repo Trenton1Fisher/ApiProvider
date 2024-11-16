@@ -18,12 +18,47 @@ TODO: Add favicon and icons later
 
 <body>
 
-    <main>
-        <section class="section-header">
-            <h1 class="section-title"> Stock Data Api Provider </h1>
+  <header>
+    <h1>API Service - Get Your Token</h1>
+</header>
 
-        </section>
-    </main>
+<main>
+    <section id="token-section">
+        <h2>Generate Your API Token</h2>
+        <p>Click the button below to generate an authorized token for our API service:</p>
+        <button onclick="tempButtonEvent()">Get Authorized Token</button>
+        <div id="token-display"></div>
+    </section>
+
+    <section id="details">
+        <h2>Service Details</h2>
+        <p>Our API service provides you with powerful tools to integrate our features into your applications. Here are some key details:</p>
+        <ul>
+            <li>RESTful API endpoints</li>
+            <li>JSON response format</li>
+            <li>HTTPS encryption for all requests</li>
+            <li>Rate limiting: 1000 requests per hour</li>
+            <li>24/7 uptime with 99.9% availability</li>
+        </ul>
+    </section>
+
+    <section id="rules">
+        <h2>Usage Rules</h2>
+        <p>To ensure fair usage and maintain service quality for all users, please adhere to the following rules:</p>
+        <ol>
+            <li>Do not share your API token with others.</li>
+            <li>Implement proper error handling in your applications.</li>
+            <li>Cache responses when appropriate to reduce unnecessary API calls.</li>
+            <li>Respect the rate limits to avoid being temporarily blocked.</li>
+            <li>Report any bugs or security vulnerabilities to our support team.</li>
+        </ol>
+    </section>
+</main>
+
+<footer>
+    <p>&copy; 2023 API Service. All rights reserved.</p>
+</footer>
+
 
   <script src="web/app.js"></script>
 

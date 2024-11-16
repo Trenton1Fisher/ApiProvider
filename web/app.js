@@ -1,1 +1,3 @@
-const temp = 'placeholer for nvim saving'
+const tempButtonEvent = () => {
+    console.log("test")
+}
