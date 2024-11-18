@@ -1,10 +1,5 @@
 package main
 
-import (
-	"fmt"
-	"bufio"
-)
-
 //Should be able to just change this to be compatable with other csv files without any relationships and just one table
 type Dog struct {
 	Name                string
