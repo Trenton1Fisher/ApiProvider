@@ -10,7 +10,7 @@ CREATE TABLE dogs (
     size VARCHAR(50),
     grooming_needs VARCHAR(100),
     exercise_requirements NUMERIC(3,1) CHECK (exercise_requirements >= 0),
-    good_with_children BOOLEAN,
+    good_with_children VARCHAR(50),
     intelligence_rating SMALLINT CHECK (intelligence_rating BETWEEN 1 AND 10),
     shedding_level VARCHAR(50),
     health_issues_risk VARCHAR(50),
@@ -35,3 +35,22 @@ CREATE INDEX idx_dogs_shedding_level ON dogs(shedding_level);
 CREATE INDEX idx_dogs_health_issues_risk ON dogs(health_issues_risk);
 CREATE INDEX idx_dogs_average_weight ON dogs(average_weight);
 CREATE INDEX idx_dogs_training_difficulty ON dogs(training_difficulty);
+
+-- Make Sure the headers in the csv file match exactly to your schema file 
+COPY dogs(
+    name,
+    origin,
+    type,
+    unique_feature,
+    friendly_rating,
+    life_span,
+    size,
+    grooming_needs,
+    exercise_requirements,
+    good_with_children,
+    intelligence_rating,
+    shedding_level,
+    health_issues_risk,
+    average_weight,
+    training_difficulty
+) FROM '/data/DogData.csv' DELIMITER ',' CSV HEADER;

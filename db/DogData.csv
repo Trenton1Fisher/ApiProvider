@@ -1,4 +1,4 @@
-Name,Origin,Type,Unique Feature,Friendly Rating (1-10),Life Span,Size,Grooming Needs,Exercise Requirements (hrs/day),Good with Children,Intelligence Rating (1-10),Shedding Level,Health Issues Risk,Average Weight (kg),Training Difficulty (1-10)
+name,origin,type,unique_feature,friendly_rating,life_span,size,grooming_needs,exercise_requirements,good_with_children,intelligence_rating,shedding_level,health_issues_risk,average_weight,training_difficulty
 Affenpinscher,Germany,Toy,Monkey-like face,7,14,Small,High,1.5,Yes,8,Moderate,Low,4,6
 Afghan Hound,Afghanistan,Hound,Long silky coat,5,13,Large,Very High,2,No,4,High,Moderate,25,8
 Airedale Terrier,England,Terrier,Largest of terriers,8,12,Medium,High,2,Yes,7,Moderate,Low,21,6
@@ -156,5 +156,5 @@ Whippet,England,Hound,Miniature Greyhound,7,13,Medium,Low,2,Yes,8,Low,Low,8,6
 Wire Fox Terrier,England,Terrier,Energetic,7,14,Small,Moderate,2,Yes,7,Moderate,Moderate,8,7
 Wirehaired Dachshund,Germany,Hound,Wiry coat,7,13,Small,Moderate,1.5,With Training,7,Moderate,High,8,7
 Wirehaired Pointing Griffon,Netherlands,Sporting,Shaggy beard,7,13,Medium,High,2,Yes,7,Moderate,Moderate,20,6
-Xoloitzcuintli,Mexico,Non-Sporting,Hairless variety,7,15,Small-Large,Low,2,With Training,8,Low,Moderate,25-Jul,6
+Xoloitzcuintli,Mexico,Non-Sporting,Hairless variety,7,15,Small-Large,Low,2,With Training,8,Low,Moderate,25,6
 Yorkshire Terrier,England,Toy,Long silky coat,8,13,Toy,High,1,Yes,7,Moderate,Moderate,2.5,6
