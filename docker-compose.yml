@@ -1,0 +1,25 @@
+services:
+  db:
+    container_name: postgres-db
+    image: postgres:14.13
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    ports:
+      - "5433:5432"
+    volumes:
+      - ./db/schema.sql:/docker-entrypoint-initdb.d/schema.sql
+
+  web-server:
+    container_name: web-server
+    build:
+      context: .
+      dockerfile: ./api/Dockerfile
+    ports:
+      - "9010:9010"
+    environment:
+      DB_URL: "postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}"
+
+volumes:
+  db_data:

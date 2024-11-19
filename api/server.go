@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 )
 
 func enableCors(w *http.ResponseWriter) {
@@ -11,8 +12,14 @@ func enableCors(w *http.ResponseWriter) {
 }
 
 func main(){
-	const PORT = ":5173"
+	const PORT = ":9010"
 
-	fmt.Println("Server is running on port:", PORT)
-	log.Fatal(http.ListenAndServe(PORT, nil))
+	dbURL := os.Getenv("DB_URL")
+    if dbURL == "" {
+        log.Fatal("DB_URL environment variable not set")
+    }
+
+
+	fmt.Println(dbURL)
+	//log.Fatal(http.ListenAndServe(PORT, nil))
 }

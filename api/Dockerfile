@@ -11,5 +11,5 @@ RUN go build -o api/api api/server.go
 
 RUN ls -al /app/api
 
-EXPOSE 5173
+EXPOSE 9010
 CMD ["./api/api"]
