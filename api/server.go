@@ -19,7 +19,11 @@ func main(){
         log.Fatal("DB_URL environment variable not set")
     }
 
+	//http.HandleFunc("/api/dog-breeds",)
+	//http.HandleFunc("/api/dog-breeds/search/id",)
+	//http.HandleFunc("/api/dog-breeds/filter")
+
 
 	fmt.Println(dbURL)
-	//log.Fatal(http.ListenAndServe(PORT, nil))
+	log.Fatal(http.ListenAndServe(PORT, nil))
 }
