@@ -3,7 +3,7 @@ services:
     container_name: db
     image: postgres:${POSTGRESQL_VERSION}
     ports:
-      - "${DB_PORT}:5432"
+      - "${DB_PORT}:${MACHINE_DB_DEFUALT_PORT}"
     volumes:
       - ./db/schema.sql:/docker-entrypoint-initdb.d/schema.sql
       - ./db/DogData.csv:/data/DogData.csv
@@ -11,6 +11,11 @@ services:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: ${POSTGRES_DB}
+
+  redis: 
+    image: redis:${REDIS_VERSION}
+    ports: 
+      - "${REDIS_PORT}:${MACHINE_REDIS_DEFUALT_PORT}"
 
   web-server:
     container_name: web-server
@@ -20,4 +25,8 @@ services:
     ports:
       - "${WEB_SERVER_PORT}:${WEB_SERVER_PORT}"
     environment:
-      DB_URL: "postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:${DB_PORT}/${POSTGRES_DB}"
+      DB_URL: "postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:${MACHINE_DB_DEFUALT_PORT}/${POSTGRES_DB}?sslmode=disable"
+      REDIS_ADDR: "redis:${MACHINE_REDIS_DEFUALT_PORT}"
+      REDIS_DB: "${REDIS_DB}"   
+      REDIS_PASSWORD: "${REDIS_PASSWORD}"
+

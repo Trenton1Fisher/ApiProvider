@@ -1,10 +1,10 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 	"os"
+	"strconv"
 )
 
 func enableCors(w *http.ResponseWriter) {
@@ -13,17 +13,45 @@ func enableCors(w *http.ResponseWriter) {
 
 func main(){
 	const PORT = ":9010"
-
+	redisAddr := os.Getenv("REDIS_ADDR")
+	redisDB, err := strconv.Atoi(os.Getenv("REDIS_DB"))
+	redisPass := os.Getenv("REDIS_PASSWORD")
 	dbURL := os.Getenv("DB_URL")
+
+	if redisAddr == "" || err != nil {
+		log.Fatal("Redis Client Missing Keys;")
+	}
     if dbURL == "" {
         log.Fatal("DB_URL environment variable not set")
     }
 
-	//http.HandleFunc("/api/dog-breeds",)
-	//http.HandleFunc("/api/dog-breeds/search/id",)
-	//http.HandleFunc("/api/dog-breeds/filter")
+	redisClient, err := NewRedisClient(redisAddr, redisDB, redisPass)
+    if err != nil {
+        log.Fatal("Redis client could not be made:", err)
+    }
+
+    // Initialize PostgreSQL client
+    dbClient, err := NewPostgreSQLClient(dbURL)
+    if err != nil {
+        log.Fatal("PostgreSQL client could not be made:", err)
+    }
 
 
-	fmt.Println(dbURL)
-	log.Fatal(http.ListenAndServe(PORT, nil))
+	http.HandleFunc("/api/get-token", func(w http.ResponseWriter, r *http.Request){
+		enableCors(&w)
+	})
+
+	http.HandleFunc("/api/dog-breeds", func(w http.ResponseWriter, r *http.Request){
+		enableCors(&w)
+	})
+
+	http.HandleFunc("/api/dog-breeds/search/id", func(w http.ResponseWriter, r *http.Request){
+		enableCors(&w)
+	})
+
+	http.HandleFunc("/api/dog-breeds/filter", func(w http.ResponseWriter, r *http.Request){
+		enableCors(&w)
+	})
+
+	//log.Fatal(http.ListenAndServe(PORT, nil))
 }
