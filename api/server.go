@@ -4,11 +4,8 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"os"
-	"strconv"
 	"time"
 
-	"github.com/golang-jwt/jwt/v4"
 	"github.com/golang-jwt/jwt/v5"
 )
 
@@ -17,12 +14,12 @@ type Claims struct {
 }
 
 func enableCors(w *http.ResponseWriter) {
-	(*w).Header().Set("Access-Control-Allow-Origin", "https://trenton1fisher.github.io/ApiProvider")
+	(*w).Header().Set("Access-Control-Allow-Origin", "https://trenton1fisher.github.io")
 }
 
 func main(){
 	const PORT = ":9010"
-	redisAddr := os.Getenv("REDIS_ADDR")
+/*	redisAddr := os.Getenv("REDIS_ADDR")
 	redisDB, err := strconv.Atoi(os.Getenv("REDIS_DB"))
 	redisPass := os.Getenv("REDIS_PASSWORD")
 	dbURL := os.Getenv("DB_URL")
@@ -39,12 +36,24 @@ func main(){
         log.Fatal("Redis client could not be made:", err)
     }
 
+	_, err = redisClient.Ping(ctx).Result()
+	if err != nil {
+		log.Fatal("Redis client could not be made:", err)
+	}
+	log.Println("Successfully connected to Redis")
+
     // Initialize PostgreSQL client
     dbClient, err := NewPostgreSQLClient(dbURL)
     if err != nil {
         log.Fatal("PostgreSQL client could not be made:", err)
     }
 
+	err = dbClient.Ping()
+	if err != nil {
+		log.Fatal("PostgreSQL ping failed:", err)
+	}
+	log.Println("Successfully connected to PostgreSQL")
+*/
 
 	http.HandleFunc("/api/get-token", func(w http.ResponseWriter, r *http.Request){
 		enableCors(&w)
@@ -58,7 +67,7 @@ func main(){
 		}
 
 		token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-		if err != nil {
+		if token == nil {
 			http.Error(w, "Error signing token", http.StatusInternalServerError)
 			return
 		}
@@ -81,5 +90,5 @@ func main(){
 		enableCors(&w)
 	})
 
-	//log.Fatal(http.ListenAndServe(PORT, nil))
+	log.Fatal(http.ListenAndServe(PORT, nil))
 }
