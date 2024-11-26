@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -61,6 +62,8 @@ func main(){
 			http.Error(w, "Error signing token", http.StatusInternalServerError)
 			return
 		}
+
+		fmt.Println(token)
 
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
