@@ -5,10 +5,18 @@ import (
 	"net/http"
 	"os"
 	"strconv"
+	"time"
+
+	"github.com/golang-jwt/jwt/v4"
+	"github.com/golang-jwt/jwt/v5"
 )
 
+type Claims struct {
+	jwt.RegisteredClaims
+}
+
 func enableCors(w *http.ResponseWriter) {
-	(*w).Header().Set("Access-Control-Allow-Origin", "*")
+	(*w).Header().Set("Access-Control-Allow-Origin", "https://trenton1fisher.github.io/ApiProvider")
 }
 
 func main(){
@@ -39,6 +47,23 @@ func main(){
 
 	http.HandleFunc("/api/get-token", func(w http.ResponseWriter, r *http.Request){
 		enableCors(&w)
+
+		claims := &Claims {
+			RegisteredClaims: jwt.RegisteredClaims{
+				Issuer: "Public-Dog-Api",
+				IssuedAt: jwt.NewNumericDate(time.Now()),
+				ExpiresAt: jwt.NewNumericDate(time.Now().Add(24 * time.Hour)),
+			},
+		}
+
+		token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+		if err != nil {
+			http.Error(w, "Error signing token", http.StatusInternalServerError)
+			return
+		}
+
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusOK)
 	})
 
 	http.HandleFunc("/api/dog-breeds", func(w http.ResponseWriter, r *http.Request){
