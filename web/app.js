@@ -10,7 +10,7 @@ const tempButtonEvent = async () => {
             console.error('Failed to fetch:', res.statusText);
         }
     } catch (error) {
-        console.error('Error:', error);
+        console.log('Error:', error);
     }
 };
 
