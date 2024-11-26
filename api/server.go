@@ -1,9 +1,10 @@
 package main
 
 import (
-	"fmt"
+	"encoding/json"
 	"log"
 	"net/http"
+	"os"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
@@ -19,6 +20,7 @@ func enableCors(w *http.ResponseWriter) {
 
 func main(){
 	const PORT = ":9010"
+	jwtSecret := []byte(os.Getenv("JWT_SECRET"))
 /*	redisAddr := os.Getenv("REDIS_ADDR")
 	redisDB, err := strconv.Atoi(os.Getenv("REDIS_DB"))
 	redisPass := os.Getenv("REDIS_PASSWORD")
@@ -58,6 +60,7 @@ func main(){
 	http.HandleFunc("/api/get-token", func(w http.ResponseWriter, r *http.Request){
 		enableCors(&w)
 
+		//Don't really feel like doing a full auth system so ill just use times 
 		claims := &Claims {
 			RegisteredClaims: jwt.RegisteredClaims{
 				Issuer: "Public-Dog-Api",
@@ -67,15 +70,18 @@ func main(){
 		}
 
 		token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-		if token == nil {
-			http.Error(w, "Error signing token", http.StatusInternalServerError)
-			return
-		}
+        signedToken, err := token.SignedString(jwtSecret)
+        if err != nil {
+            http.Error(w, "Error signing token", http.StatusInternalServerError)
+            return
+        }
 
-		fmt.Println(token)
-
-		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(http.StatusOK)
+        w.Header().Set("Content-Type", "application/json")
+        w.WriteHeader(http.StatusOK)
+        if err := json.NewEncoder(w).Encode(map[string]string{"token": signedToken}); err != nil {
+            http.Error(w, "Failed to encode response", http.StatusInternalServerError)
+            return
+        }
 	})
 
 	http.HandleFunc("/api/dog-breeds", func(w http.ResponseWriter, r *http.Request){

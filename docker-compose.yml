@@ -29,4 +29,5 @@ services:
       REDIS_ADDR: "redis:${MACHINE_REDIS_DEFUALT_PORT}"
       REDIS_DB: "${REDIS_DB}"   
       REDIS_PASSWORD: "${REDIS_PASSWORD}"
+      JWT_SECRET: "${JWT_SECRET}"
 
