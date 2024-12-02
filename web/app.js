@@ -10,7 +10,7 @@ const tempButtonEvent = async () => {
             if(data){
                 tokenDisplay.innerHTML = `
                 <p>Your API Token:</p>
-                <input type="text" value="${token}" id="api-token" readonly>
+                <input type="text" value="${data}" id="api-token" readonly>
                 <button onclick="copyToken()">Copy Token</button>
               `; 
             }
