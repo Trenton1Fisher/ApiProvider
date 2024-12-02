@@ -26,11 +26,6 @@ jobs:
         
       - name: List files in the web directory
         run: ls -R web
-
-      - name: Replace ENV variable in JS
-        run: |
-          # Replace the placeholder with the actual environment variable value
-          sed -i 's|%%PROD_API_URL%%|${{ secrets.PROD_API_URL }}|' web/app.js
         
       - name: Setup Pages
         uses: actions/configure-pages@v5

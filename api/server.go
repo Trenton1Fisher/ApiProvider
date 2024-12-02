@@ -14,8 +14,12 @@ type Claims struct {
 	jwt.RegisteredClaims
 }
 
-func enableCors(w *http.ResponseWriter) {
+func enableRestrictedCors(w *http.ResponseWriter) {
 	(*w).Header().Set("Access-Control-Allow-Origin", "https://trenton1fisher.github.io")
+}
+
+func enableOpenCors(w * http.ResponseWriter){
+	(*w).Header().Set("Access-Control-Allow-Origin", "*")
 }
 
 func main(){
@@ -38,12 +42,6 @@ func main(){
         log.Fatal("Redis client could not be made:", err)
     }
 
-	_, err = redisClient.Ping(ctx).Result()
-	if err != nil {
-		log.Fatal("Redis client could not be made:", err)
-	}
-	log.Println("Successfully connected to Redis")
-
     // Initialize PostgreSQL client
     dbClient, err := NewPostgreSQLClient(dbURL)
     if err != nil {
@@ -58,7 +56,7 @@ func main(){
 */
 
 	http.HandleFunc("/api/get-token", func(w http.ResponseWriter, r *http.Request){
-		enableCors(&w)
+		enableRestrictedCors(&w)
 
 		//Don't really feel like doing a full auth system so ill just use times 
 		claims := &Claims {
@@ -85,15 +83,15 @@ func main(){
 	})
 
 	http.HandleFunc("/api/dog-breeds", func(w http.ResponseWriter, r *http.Request){
-		enableCors(&w)
+		enableOpenCors(&w)
 	})
 
 	http.HandleFunc("/api/dog-breeds/search/id", func(w http.ResponseWriter, r *http.Request){
-		enableCors(&w)
+		enableOpenCors(&w)
 	})
 
 	http.HandleFunc("/api/dog-breeds/filter", func(w http.ResponseWriter, r *http.Request){
-		enableCors(&w)
+		enableOpenCors(&w)
 	})
 
 	log.Fatal(http.ListenAndServe(PORT, nil))

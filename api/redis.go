@@ -23,3 +23,13 @@ func NewRedisClient(redisAddr string, redisDB int , redisPass string) (*redis.Cl
 
     return client, nil
 }
+
+func AddNewToken(client *redis.Client) (bool, error) {
+
+    return true, nil
+}
+
+func CheckIfTokenExists(client *redis.Client, token string) (bool) {
+
+    return true
+}
