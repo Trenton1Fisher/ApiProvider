@@ -8,11 +8,7 @@ const tempButtonEvent = async () => {
         if (res.ok) {
             const data = await res.json();
             if(data){
-                tokenDisplay.innerHTML = `
-                <p>Your API Token:</p>
-                <input type="text" value="${data}" id="api-token" readonly>
-                <button onclick="copyToken()">Copy Token</button>
-              `; 
+                console.log(data)
             }
         } else {
             console.error('Failed to fetch:', res.statusText);

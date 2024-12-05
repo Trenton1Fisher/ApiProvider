@@ -58,7 +58,7 @@ func main(){
 	http.HandleFunc("/api/get-token", func(w http.ResponseWriter, r *http.Request){
 		enableRestrictedCors(&w)
 
-		//Don't really feel like doing a full auth system so ill just use times 
+		//Don't really feel like doing a crazy system so ill just use times
 		claims := &Claims {
 			RegisteredClaims: jwt.RegisteredClaims{
 				Issuer: "Public-Dog-Api",
