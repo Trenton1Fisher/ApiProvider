@@ -13,7 +13,7 @@ const tempButtonEvent = async () => {
                     <div id="api-token-container">
                         <p>Token:</p>
                         <p classname="token-copy" id="api-token">${token}</p>
-                        <button classname="copy-button" onClick="copyToken()"}>Copy</button>
+                        <p>Please Do not Share With anyone</p>
                     </div>
                 `;
             }
@@ -22,19 +22,5 @@ const tempButtonEvent = async () => {
         }
     } catch (error) {
         console.log('Error:', error);
-    }
-};
-
-const copyToken = () => {
-    const tokenInput = document.getElementById('api-token');
-    if (tokenInput) {
-        tokenInput.select();
-        tokenInput.setSelectionRange(0, 99999); // For mobile devices
-
-        navigator.clipboard.writeText(tokenInput.value).then(() => {
-            alert('Token copied to clipboard: ' + tokenInput.value);
-        }).catch(err => {
-            console.error('Failed to copy token: ', err);
-        });
     }
 };
