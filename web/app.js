@@ -8,7 +8,7 @@ const tempButtonEvent = async () => {
         if (res.ok) {
             const data = await res.json();
             if(data){
-                console.log(data.token)
+                console.log(data["token"])
             }
         } else {
             console.error('Failed to fetch:', res.statusText);
