@@ -9,11 +9,11 @@ const tempButtonEvent = async () => {
             const data = await res.json();
             if (data) {
                 const token = data["token"];
-                // Display the token inside a div with an input element for easy copying
                 tokenDisplay.innerHTML = `
                     <div id="api-token-container">
                         <p>Token:</p>
-                        <input type="text" id="api-token" value="${token}" readonly />
+                        <p classname="token-copy" id="api-token">${token}</p>
+                        <button classname="copy-button" onClick="copyToken()"}>Copy</button>
                     </div>
                 `;
             }
