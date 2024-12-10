@@ -25,35 +25,28 @@ func enableOpenCors(w * http.ResponseWriter){
 func main(){
 	const PORT = ":9010"
 	jwtSecret := []byte(os.Getenv("JWT_SECRET"))
-/*	redisAddr := os.Getenv("REDIS_ADDR")
-	redisDB, err := strconv.Atoi(os.Getenv("REDIS_DB"))
-	redisPass := os.Getenv("REDIS_PASSWORD")
+//	redisAddr := os.Getenv("REDIS_ADDR")
+//	redisDB, err := strconv.Atoi(os.Getenv("REDIS_DB"))
+//	redisPass := os.Getenv("REDIS_PASSWORD")
 	dbURL := os.Getenv("DB_URL")
 
-	if redisAddr == "" || err != nil {
-		log.Fatal("Redis Client Missing Keys;")
-	}
+//	if redisAddr == "" || err != nil {
+//		log.Fatal("Redis Client Missing Keys;")
+//	}
     if dbURL == "" {
         log.Fatal("DB_URL environment variable not set")
     }
 
-	redisClient, err := NewRedisClient(redisAddr, redisDB, redisPass)
-    if err != nil {
-        log.Fatal("Redis client could not be made:", err)
-    }
+//	redisClient, err := NewRedisClient(redisAddr, redisDB, redisPass)
+//    if err != nil {
+ //       log.Fatal("Redis client could not be made:", err)
+//    }
 
     // Initialize PostgreSQL client
     dbClient, err := NewPostgreSQLClient(dbURL)
     if err != nil {
         log.Fatal("PostgreSQL client could not be made:", err)
     }
-
-	err = dbClient.Ping()
-	if err != nil {
-		log.Fatal("PostgreSQL ping failed:", err)
-	}
-	log.Println("Successfully connected to PostgreSQL")
-*/
 
 	http.HandleFunc("/api/get-token", func(w http.ResponseWriter, r *http.Request){
 		enableRestrictedCors(&w)
