@@ -24,9 +24,7 @@ func NewRedisClient(redisAddr string, redisDB int , redisPass string) (*redis.Cl
     return client, nil
 }
 
-func AddNewToken(client *redis.Client, token string) (bool, error) {
-    ctx := context.Background()
-
+func AddNewToken(ctx context.Context, client *redis.Client, token string) (bool, error) {
     err := client.HSet(ctx, token, "daily_usage", 0, "window", 0).Err()
     if err != nil {
         return false, err
@@ -40,11 +38,11 @@ func AddNewToken(client *redis.Client, token string) (bool, error) {
     return true, nil
 }
 
-func CheckIfTokenExists(client *redis.Client, token string) (bool, error) {
-    ctx := context.Background()
-    exists, err := client.HExists(ctx, token, "daily_usage").Result()
+func CheckIfTokenExists(ctx context.Context, client *redis.Client, token string) (bool, error) {
+    exists, err := client.Exists(ctx, token).Result()
     if err != nil {
         return false, err
     }
-    return exists, nil
+    return exists > 0, nil
 }
+

@@ -7,6 +7,7 @@ import (
 	"os"
 	"strconv"
 	"time"
+    "fmt"
 
 	"github.com/golang-jwt/jwt/v5"
 )
@@ -67,7 +68,18 @@ func main(){
             return
         }
 
-		AddNewToken(redisClient, signedToken)
+        exists, err := AddNewToken(r.Context(), redisClient, signedToken)
+        if err != nil || !exists {
+            http.Error(w, "Failed to add token to redis", http.StatusInternalServerError)
+            }
+
+        key_exists, key_err := CheckIfTokenExists(r.Context(), redisClient, signedToken)
+        if key_err != nil || !key_exists {
+            http.Error(w, "Token not found or error checking token", http.StatusInternalServerError)
+            return
+        }
+
+        fmt.Println("Key found in Redis")
 
         w.Header().Set("Content-Type", "application/json")
         w.WriteHeader(http.StatusOK)
