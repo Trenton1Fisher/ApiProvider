@@ -31,7 +31,7 @@ func AddNewToken(client *redis.Client, token string) (bool, error) {
     if err != nil {
         return false, err
     }
-    
+
     err = client.Expire(ctx, token, 14*24*time.Hour).Err()
     if err != nil {
         return false, err
@@ -40,7 +40,11 @@ func AddNewToken(client *redis.Client, token string) (bool, error) {
     return true, nil
 }
 
-func CheckIfTokenExists(client *redis.Client, token string) (bool) {
-
-    return true
+func CheckIfTokenExists(client *redis.Client, token string) (bool, error) {
+    ctx := context.Background()
+    exists, err := client.HExists(ctx, token, "daily_usage").Result()
+    if err != nil {
+        return false, err
+    }
+    return exists, nil
 }
