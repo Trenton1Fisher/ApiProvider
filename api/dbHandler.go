@@ -19,3 +19,7 @@ func NewPostgreSQLClient(dbURL string) (*sql.DB, error) {
 
     return db, err
 }
+
+func searchById(dbClient *sql.DB, id int8){
+    (*dbClient).Query("")
+}

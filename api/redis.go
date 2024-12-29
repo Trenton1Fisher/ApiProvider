@@ -2,13 +2,13 @@ package main
 
 import (
 	"context"
+	"time"
 
 	"github.com/redis/go-redis/v9"
 )
 
-var ctx = context.Background()
-
 func NewRedisClient(redisAddr string, redisDB int , redisPass string) (*redis.Client, error){
+    ctx := context.Background()
 	client := redis.NewClient(&redis.Options{
         Addr:	  redisAddr,
         Password: redisPass,
@@ -24,7 +24,18 @@ func NewRedisClient(redisAddr string, redisDB int , redisPass string) (*redis.Cl
     return client, nil
 }
 
-func AddNewToken(client *redis.Client) (bool, error) {
+func AddNewToken(client *redis.Client, token string) (bool, error) {
+    ctx := context.Background()
+
+    err := client.HSet(ctx, token, "daily_usage", 0, "window", 0).Err()
+    if err != nil {
+        return false, err
+    }
+    
+    err = client.Expire(ctx, token, 14*24*time.Hour).Err()
+    if err != nil {
+        return false, err
+    }
 
     return true, nil
 }
