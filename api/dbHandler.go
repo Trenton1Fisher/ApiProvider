@@ -20,6 +20,9 @@ func NewPostgreSQLClient(dbURL string) (*sql.DB, error) {
     return db, err
 }
 
+func DogBreedsPaginated(dbClient *sql.DB, page int8, limit int8){
+}
+
 func searchById(dbClient *sql.DB, id int8){
     (*dbClient).Query("")
 }

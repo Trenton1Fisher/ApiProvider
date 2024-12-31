@@ -44,10 +44,10 @@ func main(){
         log.Fatal("Redis client could not be made:", err)
     }
 
-  //  dbClient, err := NewPostgreSQLClient(dbURL)
-  //  if err != nil {
-   //     log.Fatal("PostgreSQL client could not be made:", err)
-  //  }
+    dbClient, err := NewPostgreSQLClient(dbURL)
+    if err != nil {
+        log.Fatal("PostgreSQL client could not be made:", err)
+    }
 
 	http.HandleFunc("/api/get-token", func(w http.ResponseWriter, r *http.Request){
 		enableRestrictedCors(&w)
@@ -91,14 +91,55 @@ func main(){
 
 	http.HandleFunc("/api/dog-breeds", func(w http.ResponseWriter, r *http.Request){
 		enableOpenCors(&w)
+
+        pageStr := r.URL.Query().Get("page")
+        limitStr := r.URL.Query().Get("limit")
+        page := 1
+        limit := 100
+        if pageStr != "" {
+            fmt.Sscanf(pageStr, "%d", &page)
+        }
+
+        if limitStr != "" {
+            fmt.Sscanf(limitStr, "%d", &limit)
+        }
+
+        authHeader := r.Header.Get("Authorization")
+
+        if authHeader = "" || !strings.HasPrefix(authHeader, "Bearer ") {
+            http.Error(w, "Authorization Bearer token missing or improperly formatted", http.StatusInternalServerError)
+            return
+        }
+
+        token := strings.TrimPrefix(authHeader, "Bearer ")
+
+        key_exists, key_err := CheckIfTokenExists(r.Context(), redisClient, token)
+        if key_err != nil || !key_exists {
+            http.Error(w, "Token not found or error checking token", http.StatusInternalServerError)
+            return
+        }
+
+        results, db_err := DogBreedPaginated(dbClient, page, limit)
+        if db_err != nil || !results {
+            http.Error(w, "Error retrieving data please double check pagination values", http.StatusInternalServerError)
+            return
+        }
+
+        //Update token usage and window
+        //Return data
+
 	})
 
 	http.HandleFunc("/api/dog-breeds/search/id", func(w http.ResponseWriter, r *http.Request){
 		enableOpenCors(&w)
+
+        authHeader := r.Header.Get("Authorization")
 	})
 
 	http.HandleFunc("/api/dog-breeds/filter", func(w http.ResponseWriter, r *http.Request){
 		enableOpenCors(&w)
+
+        authHeader := r.Header.Get("Authorization")
 	})
 
 	log.Fatal(http.ListenAndServe(PORT, nil))
