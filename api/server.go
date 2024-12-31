@@ -2,12 +2,13 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 	"os"
 	"strconv"
+	"strings"
 	"time"
-    "fmt"
 
 	"github.com/golang-jwt/jwt/v5"
 )
@@ -106,7 +107,7 @@ func main(){
 
         authHeader := r.Header.Get("Authorization")
 
-        if authHeader = "" || !strings.HasPrefix(authHeader, "Bearer ") {
+        if authHeader == "" || !strings.HasPrefix(authHeader, "Bearer ") {
             http.Error(w, "Authorization Bearer token missing or improperly formatted", http.StatusInternalServerError)
             return
         }
@@ -119,17 +120,24 @@ func main(){
             return
         }
 
-        results, db_err := DogBreedPaginated(dbClient, page, limit)
-        if db_err != nil || !results {
+        results, db_err := DogBreedsPaginated(dbClient, page, limit)
+        if db_err != nil || len(results) < 1 {
             http.Error(w, "Error retrieving data please double check pagination values", http.StatusInternalServerError)
             return
         }
 
-        //Update token usage and window
-        //Return data
+        //TODO: Update token usage and window time for token usage limiting
 
+        w.Header().Set("Content-Type", "application/json")
+        w.WriteHeader(http.StatusOK)
+        if err := json.NewEncoder(w).Encode(map[string][]Dog{"dogs": results}); err != nil {
+            http.Error(w, "Failed to encode response", http.StatusInternalServerError)
+            return
+        }
 	})
 
+
+/*
 	http.HandleFunc("/api/dog-breeds/search/id", func(w http.ResponseWriter, r *http.Request){
 		enableOpenCors(&w)
 
@@ -141,6 +149,7 @@ func main(){
 
         authHeader := r.Header.Get("Authorization")
 	})
-
+*/
 	log.Fatal(http.ListenAndServe(PORT, nil))
 }
+
