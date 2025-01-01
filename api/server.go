@@ -165,7 +165,7 @@ func main(){
 
         result, db_err := DogById(dbClient, id)
         if db_err != nil {
-            http.Error(w, "Error retrieving data please double check pagination values", http.StatusInternalServerError)
+            http.Error(w, "Error retrieving data please double check id value", http.StatusInternalServerError)
             return
         }
 
