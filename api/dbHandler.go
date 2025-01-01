@@ -78,3 +78,26 @@ func DogBreedsPaginated(dbClient *sql.DB, page int, limit int) ([]Dog, error){
     return dogs, nil
 
 }
+
+func DogById(dbClient *sql.DB, id int) (Dog, error) {
+    query := `
+        SELECT * FROM dogs WHERE id = $1
+    `
+    var dog Dog
+    row := dbClient.QueryRow(query, id)
+    err := row.Scan(
+        &dog.ID, &dog.Name, &dog.Origin, &dog.Type, &dog.UniqueFeature, 
+        &dog.FriendlyRating, &dog.LifeSpan, &dog.Size, &dog.GroomingNeeds, 
+        &dog.ExerciseRequirements, &dog.GoodWithChildren, &dog.IntelligenceRating, 
+        &dog.SheddingLevel, &dog.HealthIssuesRisk, &dog.AverageWeight, &dog.TrainingDifficulty,
+    )
+
+    if err != nil {
+        if err == sql.ErrNoRows {
+            return Dog{}, fmt.Errorf("no dog found with id %d", id)
+        }
+        return Dog{}, fmt.Errorf("error scanning row: %v", err)
+    }
+
+    return dog, nil
+}

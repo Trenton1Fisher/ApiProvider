@@ -137,13 +137,48 @@ func main(){
 	})
 
 
-/*
-	http.HandleFunc("/api/dog-breeds/search/id", func(w http.ResponseWriter, r *http.Request){
+
+	http.HandleFunc("/api/dog-breeds/search/{id}", func(w http.ResponseWriter, r *http.Request){
 		enableOpenCors(&w)
+        idUrl := r.PathValue("id")
+        id := 0
+
+        if idUrl != "" {
+            fmt.Sscanf(idUrl, "%d", &id)
+        }
+
 
         authHeader := r.Header.Get("Authorization")
-	})
 
+        if authHeader == "" || !strings.HasPrefix(authHeader, "Bearer ") {
+            http.Error(w, "Authorization Bearer token missing or improperly formatted", http.StatusInternalServerError)
+            return
+        }
+
+        token := strings.TrimPrefix(authHeader, "Bearer ")
+
+        key_exists, key_err := CheckIfTokenExists(r.Context(), redisClient, token)
+        if key_err != nil || !key_exists {
+            http.Error(w, "Token not found or error checking token", http.StatusInternalServerError)
+            return
+        }
+
+        result, db_err := DogById(dbClient, id)
+        if db_err != nil {
+            http.Error(w, "Error retrieving data please double check pagination values", http.StatusInternalServerError)
+            return
+        }
+
+        //TODO: Update token usage and window time for token usage limiting
+
+        w.Header().Set("Content-Type", "application/json")
+        w.WriteHeader(http.StatusOK)
+        if err := json.NewEncoder(w).Encode(map[string]Dog{"dogs": result}); err != nil {
+            http.Error(w, "Failed to encode response", http.StatusInternalServerError)
+            return
+        }
+	})
+/*
 	http.HandleFunc("/api/dog-breeds/filter", func(w http.ResponseWriter, r *http.Request){
 		enableOpenCors(&w)
 
