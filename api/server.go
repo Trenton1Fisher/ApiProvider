@@ -178,13 +178,13 @@ func main(){
             return
         }
 	})
-/*
+
 	http.HandleFunc("/api/dog-breeds/filter", func(w http.ResponseWriter, r *http.Request){
 		enableOpenCors(&w)
 
-        authHeader := r.Header.Get("Authorization")
+        //im thinking we map over this 
 	})
-*/
+
 	log.Fatal(http.ListenAndServe(PORT, nil))
 }
 
