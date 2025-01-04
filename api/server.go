@@ -168,12 +168,9 @@ func main(){
             http.Error(w, "Error retrieving data please double check id value", http.StatusInternalServerError)
             return
         }
-        
+
         success, err := UpdateTokenWindow(r.Context(), redisClient, token)
         success, err := UpdateTokenUsageCount(r.Context(), redisClient, token)
-        
-
-        //TODO: Update token usage and window time for token usage limiting
 
         w.Header().Set("Content-Type", "application/json")
         w.WriteHeader(http.StatusOK)

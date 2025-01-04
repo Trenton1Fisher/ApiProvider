@@ -46,10 +46,19 @@ func CheckIfTokenExists(ctx context.Context, client *redis.Client, token string)
     return exists > 0, nil
 }
 
-func UpdateTokenWindow(ctx context.Context, client *redis.Client, token string) {
+func UpdateTokenWindow(ctx context.Context, client *redis.Client, token string) (bool, error){
+    if err != nil {
+        return false, err
+    }
+
+    return true, nil
 }
 
-func UpdateTokenUsageCount(ctx context.Context, client *redis.Client, token string){
+func UpdateTokenUsageCount(ctx context.Context, client *redis.Client, token string) (bool, error){
+    if err != nil {
+        return false, err
+    }
+    return true, nil
 }
 
 
