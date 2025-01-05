@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"strconv"
 	"time"
 
 	"github.com/redis/go-redis/v9"
@@ -46,19 +47,46 @@ func CheckIfTokenExists(ctx context.Context, client *redis.Client, token string)
     return exists > 0, nil
 }
 
-func UpdateTokenWindow(ctx context.Context, client *redis.Client, token string) (bool, error){
+
+func UpdateTokenUsage(ctx context.Context, client *redis.Client, token string) (bool, string) {
+    tokenData, err := client.HGetAll(ctx, token).Result()
     if err != nil {
-        return false, err
+        return false, "Error retrieving token data: " + err.Error()
     }
 
-    return true, nil
-}
-
-func UpdateTokenUsageCount(ctx context.Context, client *redis.Client, token string) (bool, error){
-    if err != nil {
-        return false, err
+    if len(tokenData) == 0 {
+        return false, "Token not found"
     }
-    return true, nil
+
+    windowTime, err := strconv.Atoi(tokenData["window"])
+    if err != nil {
+        return false, "Error parsing window time: " + err.Error()
+    }
+    
+    dailyUsage, err := strconv.Atoi(tokenData["daily_usage"])
+    if err != nil {
+        return false, "Error parsing daily usage: " + err.Error()
+    }
+
+    currentTime := time.Now().Unix()
+
+    if currentTime-int64(windowTime) >= 24*60*60 {
+        err = client.HSet(ctx, token, "daily_usage", 0, "window", currentTime).Err()
+        if err != nil {
+            return false, "Error resetting token window and usage: " + err.Error()
+        }
+        return true, "" 
+    }
+
+    if dailyUsage < 1000 {
+        err = client.HIncrBy(ctx, token, "daily_usage", 1).Err()
+        if err != nil {
+            return false, "Error incrementing token usage: " + err.Error()
+        }
+        return true, ""
+    }
+
+    return false, "Token Limit Reached"
 }
 
 

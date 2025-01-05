@@ -126,7 +126,14 @@ func main(){
             return
         }
 
-        //TODO: Update token usage and window time for token usage limiting
+        upd_success, upd_err := UpdateTokenWindow(r.Context(), redisClient, token)
+        if upd_err != nil || !upd_success {
+            http.Error(w, "Error Updating Token Usage 24 hour window, please try again later", http.StatusInternalServerError)
+        }
+        use_success, use_err := UpdateTokenUsageCount(r.Context(), redisClient, token)
+        if use_err != err || !use_success{
+            http.Error(w, "Error updating and checking token usage, please try again later", http.StatusInternalServerError)
+        }
 
         w.Header().Set("Content-Type", "application/json")
         w.WriteHeader(http.StatusOK)
@@ -169,8 +176,14 @@ func main(){
             return
         }
 
-        success, err := UpdateTokenWindow(r.Context(), redisClient, token)
-        success, err := UpdateTokenUsageCount(r.Context(), redisClient, token)
+        upd_success, upd_err := UpdateTokenWindow(r.Context(), redisClient, token)
+        if upd_err != nil || !upd_success {
+            http.Error(w, "Error Updating Token Usage 24 hour window, please try again later", http.StatusInternalServerError)
+        }
+        use_success, use_err := UpdateTokenUsageCount(r.Context(), redisClient, token)
+        if use_err != err || !use_success{
+            http.Error(w, "Error updating and checking token usage, please try again later", http.StatusInternalServerError)
+        }
 
         w.Header().Set("Content-Type", "application/json")
         w.WriteHeader(http.StatusOK)
