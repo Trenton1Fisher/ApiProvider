@@ -126,13 +126,10 @@ func main(){
             return
         }
 
-        upd_success, upd_err := UpdateTokenWindow(r.Context(), redisClient, token)
-        if upd_err != nil || !upd_success {
-            http.Error(w, "Error Updating Token Usage 24 hour window, please try again later", http.StatusInternalServerError)
-        }
-        use_success, use_err := UpdateTokenUsageCount(r.Context(), redisClient, token)
-        if use_err != err || !use_success{
-            http.Error(w, "Error updating and checking token usage, please try again later", http.StatusInternalServerError)
+        success, error_message := UpdateTokenUsage(r.Context(), redisClient, token)
+        if error_message != "" || !success {
+            http.Error(w, error_message, http.StatusInternalServerError)
+            return
         }
 
         w.Header().Set("Content-Type", "application/json")
@@ -176,13 +173,10 @@ func main(){
             return
         }
 
-        upd_success, upd_err := UpdateTokenWindow(r.Context(), redisClient, token)
-        if upd_err != nil || !upd_success {
-            http.Error(w, "Error Updating Token Usage 24 hour window, please try again later", http.StatusInternalServerError)
-        }
-        use_success, use_err := UpdateTokenUsageCount(r.Context(), redisClient, token)
-        if use_err != err || !use_success{
-            http.Error(w, "Error updating and checking token usage, please try again later", http.StatusInternalServerError)
+        success, error_message := UpdateTokenUsage(r.Context(), redisClient, token)
+        if error_message != "" || !success {
+            http.Error(w, error_message, http.StatusInternalServerError)
+            return
         }
 
         w.Header().Set("Content-Type", "application/json")
@@ -196,7 +190,39 @@ func main(){
 	http.HandleFunc("/api/dog-breeds/filter", func(w http.ResponseWriter, r *http.Request){
 		enableOpenCors(&w)
 
-        //im thinking we map over this 
+        //Grab all the params most likely in a helper function due to length and amount of params
+
+        authHeader := r.Header.Get("Authorization")
+        if authHeader == "" || !strings.HasPrefix(authHeader, "Bearer ") {
+            http.Error(w, "Authorization Bearer token missing or improperly formatted", http.StatusInternalServerError)
+            return
+        }
+
+        token := strings.TrimPrefix(authHeader, "Bearer ")
+        key_exists, key_err := CheckIfTokenExists(r.Context(), redisClient, token)
+        if key_err != nil || !key_exists {
+            http.Error(w, "Token not found or error checking token", http.StatusInternalServerError)
+            return
+        }
+
+        //Db Query for the data using a map ds, make sure to use paramarertized queries
+
+        success, error_message := UpdateTokenUsage(r.Context(), redisClient, token)
+        if error_message != "" || !success {
+            http.Error(w, error_message, http.StatusInternalServerError)
+            return
+        }
+
+        //Return all data in an array of dog data like the first endpoint
+
+        
+
+        w.Header().Set("Content-Type", "application/json")
+        w.WriteHeader(http.StatusOK)
+        if err := json.NewEncoder(w).Encode(map[string][]Dog{"dogs": results}); err != nil {
+            http.Error(w, "Failed to encode response", http.StatusInternalServerError)
+            return
+        }
 	})
 
 	log.Fatal(http.ListenAndServe(PORT, nil))

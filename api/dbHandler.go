@@ -101,3 +101,9 @@ func DogById(dbClient *sql.DB, id int) (Dog, error) {
 
     return dog, nil
 }
+
+func DogsByFilter(dbClient *sql.DB, /*map ds of params*/)([]Dog, error) {
+    //Loop over the map making the query
+    //Get the results
+    //Return results
+}
