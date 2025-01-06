@@ -173,12 +173,12 @@ func main(){
             return
         }
 
-        success, error_message := UpdateTokenUsage(r.Context(), redisClient, token)
+   /*     success, error_message := UpdateTokenUsage(r.Context(), redisClient, token)
         if error_message != "" || !success {
             http.Error(w, error_message, http.StatusInternalServerError)
             return
         }
-
+*/
         w.Header().Set("Content-Type", "application/json")
         w.WriteHeader(http.StatusOK)
         if err := json.NewEncoder(w).Encode(map[string]Dog{"dogs": result}); err != nil {
@@ -207,12 +207,12 @@ func main(){
 
         //Db Query for the data using a map ds, make sure to use paramarertized queries
 
-        success, error_message := UpdateTokenUsage(r.Context(), redisClient, token)
+      /*I  success, error_message := UpdateTokenUsage(r.Context(), redisClient, token)
         if error_message != "" || !success {
             http.Error(w, error_message, http.StatusInternalServerError)
             return
         }
-
+*/
         //Return all data in an array of dog data like the first endpoint
 
         
