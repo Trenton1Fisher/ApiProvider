@@ -199,6 +199,11 @@ func main(){
 		enableOpenCors(&w)
 
         //Grab all the params most likely in a helper function due to length and amount of params
+        queryParams := r.URL.Query()
+        for _, v := range DogTableColumns {
+            param_value := queryParams.Get(v)
+            fmt.Println(param_value)
+        }
 
         authHeader := r.Header.Get("Authorization")
         if authHeader == "" || !strings.HasPrefix(authHeader, "Bearer ") {
