@@ -113,12 +113,30 @@ func DogById(dbClient *sql.DB, id int) (Dog, error) {
 }
 
 func DogsByFilter(dbClient *sql.DB, query string, values []interface{})([]Dog, error) {
-   fmt.Println(query)
-   fmt.Println(values)
 
-   var dog []Dog
+   var dogs []Dog
+   rows, err := dbClient.Query(query, values...)
+   if err != nil {
+       return nil, fmt.Errorf("error executing query: %v", err)
+   }
+   for rows.Next() {
+    var dog Dog
+    if err := rows.Scan(
+        &dog.ID, &dog.Name, &dog.Origin, &dog.Type, &dog.UniqueFeature, 
+        &dog.FriendlyRating, &dog.LifeSpan, &dog.Size, &dog.GroomingNeeds, 
+        &dog.ExerciseRequirements, &dog.GoodWithChildren, &dog.IntelligenceRating, 
+        &dog.SheddingLevel, &dog.HealthIssuesRisk, &dog.AverageWeight, &dog.TrainingDifficulty,
+    ); err != nil {
+        return nil, fmt.Errorf("error scanning row: %v", err)
+    }
+    dogs = append(dogs, dog)
+    }
 
-   return dog, nil
+    if err := rows.Err(); err != nil {
+        return nil, fmt.Errorf("error with ros: %v", err)
+    }
+
+   return dogs, nil
 }
 
 func DogsByFilterQueryBuilder(params url.Values) (string, []interface{}) {
