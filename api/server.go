@@ -13,14 +13,6 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 )
 
-//Whitelisted url params for filtered api endpoint
-var DogTableColumns = []string{
-    "id", "name", "origin", "type", "unique_feature", "friendly_rating",
-    "life_span", "size", "grooming_needs", "exercise_requirements",
-    "good_with_children", "intelligence_rating", "shedding_level",
-    "health_issues_risk", "average_weight", "training_difficulty",
-}
-
 type Claims struct {
 	jwt.RegisteredClaims
 }
@@ -198,12 +190,9 @@ func main(){
 	http.HandleFunc("/api/dog-breeds/filter", func(w http.ResponseWriter, r *http.Request){
 		enableOpenCors(&w)
 
-        //Grab all the params most likely in a helper function due to length and amount of params
         queryParams := r.URL.Query()
-        for _, v := range DogTableColumns {
-            param_value := queryParams.Get(v)
-            fmt.Println(param_value)
-        }
+
+        query, values := DogsByFilterQueryBuilder(queryParams)
 
         authHeader := r.Header.Get("Authorization")
         if authHeader == "" || !strings.HasPrefix(authHeader, "Bearer ") {
@@ -218,17 +207,17 @@ func main(){
             return
         }
 
-        //Db Query for the data using a map ds, make sure to use paramarertized queries
+        results, db_err := DogsByFilter(dbClient, query, values)
+        if db_err != nil || len(results) < 1 {
+            http.Error(w, "Error retrieving data please double check that filter options match available fields", http.StatusInternalServerError)
+            return
+        }
 
-      I  success, error_message := UpdateTokenUsage(r.Context(), redisClient, token)
+       success, error_message := UpdateTokenUsage(r.Context(), redisClient, token)
         if error_message != "" || !success {
             http.Error(w, error_message, http.StatusInternalServerError)
             return
         }
-
-        //Return all data in an array of dog data like the first endpoint
-
-        
 
         w.Header().Set("Content-Type", "application/json")
         w.WriteHeader(http.StatusOK)

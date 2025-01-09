@@ -3,6 +3,8 @@ package main
 import (
 	"database/sql"
 	"fmt"
+	"net/url"
+	"strings"
 
 	_ "github.com/lib/pq"
 )
@@ -24,6 +26,14 @@ type Dog struct {
 	HealthIssuesRisk     string
 	AverageWeight        float64
 	TrainingDifficulty   int16
+}
+
+//Whitelisted url params for filtered api endpoint
+var DogTableColumns = []string{
+    "id", "name", "origin", "type", "unique_feature", "friendly_rating",
+    "life_span", "size", "grooming_needs", "exercise_requirements",
+    "good_with_children", "intelligence_rating", "shedding_level",
+    "health_issues_risk", "average_weight", "training_difficulty",
 }
 
 func NewPostgreSQLClient(dbURL string) (*sql.DB, error) {
@@ -102,8 +112,31 @@ func DogById(dbClient *sql.DB, id int) (Dog, error) {
     return dog, nil
 }
 
-func DogsByFilter(dbClient *sql.DB, /*map ds of params*/)([]Dog, error) {
-    //Loop over the map making the query
-    //Get the results
-    //Return results
+func DogsByFilter(dbClient *sql.DB, query string, values []interface{})([]Dog, error) {
+   fmt.Println(query)
+   fmt.Println(values)
+
+   var dog []Dog
+
+   return dog, nil
+}
+
+func DogsByFilterQueryBuilder(params url.Values) (string, []interface{}) {
+	values := []interface{}{}
+	conditions := []string{}
+	query := "SELECT * FROM dogs"
+
+	for _, v := range DogTableColumns {
+		paramValue := params.Get(v)
+		if paramValue != "" {
+			values = append(values, paramValue)
+			conditions = append(conditions, fmt.Sprintf("%s = $%d", v, len(values)))
+		}
+	}
+
+	if len(conditions) > 0 {
+		query += " WHERE " + strings.Join(conditions, " AND ")
+	}
+
+	return query, values
 }
