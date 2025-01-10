@@ -190,15 +190,12 @@ func main(){
 	http.HandleFunc("/api/dog-breeds/filter", func(w http.ResponseWriter, r *http.Request){
 		enableOpenCors(&w)
 
-        queryParams := r.URL.Query()
-
-        query, values := DogsByFilterQueryBuilder(queryParams)
-
         authHeader := r.Header.Get("Authorization")
         if authHeader == "" || !strings.HasPrefix(authHeader, "Bearer ") {
             http.Error(w, "Authorization Bearer token missing or improperly formatted", http.StatusInternalServerError)
             return
         }
+
 
         token := strings.TrimPrefix(authHeader, "Bearer ")
         key_exists, key_err := CheckIfTokenExists(r.Context(), redisClient, token)
@@ -206,6 +203,10 @@ func main(){
             http.Error(w, "Token not found or error checking token", http.StatusInternalServerError)
             return
         }
+
+        queryParams := r.URL.Query()
+
+        query, values := DogsByFilterQueryBuilder(queryParams)
 
         results, db_err := DogsByFilter(dbClient, query, values)
         if db_err != nil || len(results) < 1 {
