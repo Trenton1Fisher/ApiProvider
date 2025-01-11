@@ -47,7 +47,6 @@ func CheckIfTokenExists(ctx context.Context, client *redis.Client, token string)
     return exists > 0, nil
 }
 
-
 func UpdateTokenUsage(ctx context.Context, client *redis.Client, token string) (bool, string) {
     tokenData, err := client.HGetAll(ctx, token).Result()
     if err != nil {
@@ -62,7 +61,6 @@ func UpdateTokenUsage(ctx context.Context, client *redis.Client, token string) (
     if err != nil {
         return false, "Error setting token TTL to 2 weeks: " + err.Error()
     }
-
 
     windowTime, err := strconv.Atoi(tokenData["window"])
     if err != nil {
@@ -81,7 +79,8 @@ func UpdateTokenUsage(ctx context.Context, client *redis.Client, token string) (
         if err != nil {
             return false, "Error resetting token window and usage: " + err.Error()
         }
-        return true, "" 
+
+        return true, ""
     }
 
     if dailyUsage < 1000 {
@@ -89,10 +88,14 @@ func UpdateTokenUsage(ctx context.Context, client *redis.Client, token string) (
         if err != nil {
             return false, "Error incrementing token usage: " + err.Error()
         }
-        return true, ""
+
+        return true, "" 
     }
+
 
     return false, "Token Limit Reached"
 }
+
+
 
 
