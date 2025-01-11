@@ -58,6 +58,12 @@ func UpdateTokenUsage(ctx context.Context, client *redis.Client, token string) (
         return false, "Token not found"
     }
 
+    err = client.Expire(ctx, token, 14*24*time.Hour).Err()
+    if err != nil {
+        return false, "Error setting token TTL to 2 weeks: " + err.Error()
+    }
+
+
     windowTime, err := strconv.Atoi(tokenData["window"])
     if err != nil {
         return false, "Error parsing window time: " + err.Error()

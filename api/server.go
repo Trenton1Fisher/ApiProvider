@@ -196,7 +196,6 @@ func main(){
             return
         }
 
-
         token := strings.TrimPrefix(authHeader, "Bearer ")
         key_exists, key_err := CheckIfTokenExists(r.Context(), redisClient, token)
         if key_err != nil || !key_exists {
